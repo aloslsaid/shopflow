@@ -85,23 +85,3 @@ If Swagger returns `409 email in use`, the account already exists. Do not regist
 - Keep `.env` private. The included `.env` is configured for local development; replace secrets before deploying publicly.
 # SHOPFLOW AI – Your Business, Managed by AI
 
-**SHOPFLOW AI** is an intelligent business management platform that puts your entire store under your control through a single AI-powered chat assistant.
-
-Manage your business, track profits, monitor inventory, handle orders, and organize deliveries through natural conversations with AI.
-
-### Key Features
-
-- **AI Business Assistant:** Control your entire store using chat commands. Ask questions, request reports, and perform actions through natural language.
-- **Profit & Sales Tracking:** Monitor daily, weekly, and monthly revenue, expenses, costs, and net profits.
-- **Smart Inventory Management:** Track stock levels, manage products, receive low-stock alerts, and update inventory instantly.
-- **Order Management:** Create, update, search, and track customer orders.
-- **WhatsApp Integration:** Communicate with customers, send order confirmations, share updates, and coordinate deliveries through WhatsApp.
-- **Delivery Management:** Track delivery status, manage delivery assignments, and monitor completed and pending shipments.
-- **Business Analytics:** Get AI-powered insights, sales summaries, performance reports, and recommendations to improve your business.
-- **Conversational Control:** Ask AI to perform business operations instead of navigating complicated dashboards.
-
-### The Vision
-
-SHOPFLOW AI transforms traditional store management into a conversational experience. Instead of manually navigating multiple tools, you simply tell your AI assistant what you need, and it helps manage your business from one place.
-
-**One Store. One AI Assistant. Complete Business Control.**
