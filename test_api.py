@@ -1,7 +1,7 @@
 import os
 os.environ.update(JWT_SECRET="t", DATABASE_URL="sqlite:///:memory:")
 from fastapi.testclient import TestClient
-from app.main import app
+from .main import app
 def H(t): return {"Authorization": f"Bearer {t}"}
 def reg(cl, n): return cl.post("/auth/register-store", json={"store_name": n, "email": f"{n}@x.com", "password": "password1"}).json()["token"]
 def test_full_flow_and_isolation():
