@@ -91,7 +91,7 @@ class NewOrder(BaseModel):
     phone: str = Field(min_length=7)
     address: str
     items: list[Item] = Field(min_length=1)
-    conversation: list = []
+    conversation: list[dict] = Field(default_factory=list)
 
 
 class NewProduct(BaseModel):
@@ -549,7 +549,7 @@ def get_llm():
 
 class ChatIn(BaseModel):
     message: str = Field(min_length=1, max_length=2000)
-    history: list[dict] = Field(default=[], max_length=40)
+    history: list[dict] = Field(default_factory=list, max_length=40)
 
 
 @app.post("/ai/chat")
