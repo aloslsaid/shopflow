@@ -1,8 +1,8 @@
 """DB-backed AI workflow tests. Need fastapi+sqlalchemy installed (NOT runnable in the authoring sandbox)."""
-import os, json
+import os, json, pytest
 os.environ.update(JWT_SECRET="t", DATABASE_URL="sqlite:///:memory:")
 from fastapi.testclient import TestClient
-from app.main import app, get_llm
+from .main import app, get_llm, AI_AVAILABLE\npytestmark = pytest.mark.skipif(not AI_AVAILABLE, reason="Optional AI integration package is not included in this checkout.")
 def H(t): return {"Authorization": f"Bearer {t}"}
 def call(name, args): return {"choices": [{"message": {"content": "", "tool_calls": [{"id": "1", "function": {"name": name, "arguments": json.dumps(args)}}]}}]}
 class Fake:
