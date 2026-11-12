@@ -16,6 +16,9 @@ def ctx(authorization: str = Header(default="")) -> Ctx:
         raise HTTPException(401, "invalid or missing token")
 def need(min_role):
     def dep(c: Ctx = Depends(ctx)):
-        if ROLES[c.role] < ROLES[min_role]: raise HTTPException(403, "insufficient role")
+        if c.role not in ROLES or min_role not in ROLES:
+            raise HTTPException(403, "invalid role")
+        if ROLES[c.role] < ROLES[min_role]:
+            raise HTTPException(403, "insufficient role")
         return c
     return dep
