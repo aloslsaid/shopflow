@@ -1,6 +1,6 @@
 import pytest, os
 from cryptography.fernet import Fernet
-from app.logic import *
+from .logic import *
 def test_profit_uses_actual_cost():
     r, c, p = order_profit([{"qty": 2, "unit_price": 50, "unit_cost": 30}, {"qty": 1, "unit_price": 20, "unit_cost": 5}])
     assert (r, c, p) == (120, 65, 55)
@@ -14,5 +14,5 @@ def test_stock_rejects_negative():
     with pytest.raises(ValueError): apply_stock({("j", "M"): 1}, {("j", "M"): -2})
 def test_crypto_roundtrip():
     os.environ["CREDENTIALS_KEY"] = Fernet.generate_key().decode()
-    from app.crypto import encrypt, decrypt
+    from .crypto import encrypt, decrypt
     assert decrypt(encrypt("tok")) == "tok" != encrypt("tok")
