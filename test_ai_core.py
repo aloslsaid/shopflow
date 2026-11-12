@@ -1,7 +1,8 @@
 import json, os, pathlib, pytest
 from datetime import datetime
 from decimal import Decimal
-pytest.importorskip("shopflow.ai.agent", reason="Optional AI integration package is not included in this checkout.")\nfrom shopflow.ai.agent import run_agent, clean_history
+pytest.importorskip("shopflow.ai.agent", reason="Optional AI integration package is not included in this checkout.")
+from shopflow.ai.agent import run_agent, clean_history
 from shopflow.ai.errors import ToolError, LLMNotConfigured, LLMError
 from shopflow.ai.llm import OpenRouterClient
 from shopflow.logic import period_bounds, summarize
