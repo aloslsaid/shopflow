@@ -14,10 +14,39 @@ from .models import *
 from .security import *
 from . import services as S
 from .logic import delivery_message, wa_link, period_bounds
-from .ai.llm import OpenRouterClient
-from .ai.errors import ToolError, LLMError, LLMNotConfigured
-from .ai.agent import run_agent
-from .ai.tools import Tools, SPECS
+# The AI package is an optional add-on. Keep core inventory/order features
+# importable when that package is absent from a source-only checkout.
+try:
+    from .ai.llm import OpenRouterClient
+    from .ai.errors import ToolError, LLMError, LLMNotConfigured
+    from .ai.agent import run_agent
+    from .ai.tools import Tools, SPECS
+    AI_AVAILABLE = True
+    AI_IMPORT_ERROR = ""
+except ModuleNotFoundError as exc:
+    OpenRouterClient = None
+    run_agent = None
+    Tools = None
+    SPECS = []
+    AI_AVAILABLE = False
+    AI_IMPORT_ERROR = str(exc)
+
+    class ToolError(Exception):
+        pass
+
+    class LLMError(Exception):
+        pass
+
+    class LLMNotConfigured(Exception):
+        pass
+
+
+def _require_ai():
+    if not AI_AVAILABLE:
+        raise HTTPException(
+            status_code=503,
+            detail=f"AI integration is unavailable because its modules are missing: {AI_IMPORT_ERROR}",
+        )
 
 
 logging.basicConfig(level=logging.INFO)
@@ -514,6 +543,7 @@ def add_expense(
 # ---------------- AI Agent ----------------
 
 def get_llm():
+    _require_ai()
     return OpenRouterClient()
 
 
@@ -593,6 +623,7 @@ def ai_pending(
     c: Ctx = Depends(need("owner")),
     db: Session = Depends(get_db)
 ):
+    _require_ai()
     rows = db.scalars(
         select(PendingAction).where(
             PendingAction.store_id == c.sid,
@@ -616,6 +647,7 @@ def ai_confirm(
     c: Ctx = Depends(need("owner")),
     db: Session = Depends(get_db)
 ):
+    _require_ai()
     pa = _pending(db, c, pid)
 
     if pa.status != "pending":
@@ -645,6 +677,7 @@ def ai_cancel(
     c: Ctx = Depends(need("owner")),
     db: Session = Depends(get_db)
 ):
+    _require_ai()
     pa = _pending(db, c, pid)
 
     if pa.status != "pending":
