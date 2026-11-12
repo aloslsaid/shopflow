@@ -6,7 +6,7 @@ def H(t): return {"Authorization": f"Bearer {t}"}
 def reg(cl, n): return cl.post("/auth/register-store", json={"store_name": n, "email": f"{n}@x.com", "password": "password1"}).json()["token"]
 def test_full_flow_and_isolation():
     with TestClient(app) as cl:
-        a, b = reg(cl, "a"), reg(cl, "b")
+        a, b = reg(cl, "store-a"), reg(cl, "store-b")
         pid = cl.post("/products", json={"name": "Jacket", "price": "50", "cost": "30"}, headers=H(a)).json()["id"]
         cl.post("/stock", json={"product_id": pid, "size": "M", "color": "black", "delta": 10}, headers=H(a))
         o = cl.post("/orders", json={"customer_name": "C", "phone": "+9647701234567", "address": "Baghdad", "items": [{"product_id": pid, "size": "M", "color": "black", "qty": 2}]}, headers=H(a)).json()
