@@ -1,24 +1,64 @@
-# ShopFlow
+# SHOPFLOW AI
 
-ShopFlow is an AI-assisted shop-management project. The tracked root includes Python API/business-logic modules, TypeScript/React interface files, a SQLite database file, and several pytest-style test files. The intended features described by the project include product and stock management, orders, reporting, and optional AI assistance.
+## Windows setup (PowerShell)
 
-## Repository layout
+### 1) Backend
 
-The current files are at the repository root (for example `main.py`, `models.py`, `services.py`, `App.tsx`, and `test_api.py`). Earlier setup notes referred to `backend/app` and `frontend` directories, which are not present in the root file listing. The API module also imports `.ai.*` modules; verify that those modules exist before starting the server. Therefore, the old `uvicorn app.main:app` and `cd frontend` commands are not confirmed for this checkout.
+Open PowerShell terminal 1:
 
-## Installation and verification
+```powershell
+cd C:\Users\YOUR_USERNAME\Downloads\shopflow
+py -3.11 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+cd backend
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+```
 
-1. Install Python and Node.js/npm.
-2. Create and activate a Python virtual environment.
-3. Install Python dependencies with `python -m pip install -r requirements.txt`.
-4. Inspect the package structure and resolve the entry point before starting the API; do not assume a server command from the outdated directory instructions.
-5. Run the existing tests from the repository root with `python -m pytest` after dependencies and imports are available.
-6. The root currently has no `package.json`, so the frontend does not have a verified npm install or start command.
+Keep this terminal open. Backend:
+- API: http://127.0.0.1:8000
+- Swagger docs: http://127.0.0.1:8000/docs
 
-## Configuration and security
+The project `.env` is loaded automatically. SQLite database is created as `backend/shopflow.db` when the backend is started from the `backend` folder. Do not delete it if you want to keep your store data.
 
-The AI integration requires provider configuration; supply secrets through environment variables or an untracked `.env` file and never commit real credentials. The repository contains `shopflow.db`; treat it as local business data and do not publish or overwrite it casually. Use a disposable database for testing. Before deploying, review authentication, token handling, CORS, database backups, and access controls.
+### 2) Frontend
 
-## Known onboarding gaps
+Open a SECOND PowerShell terminal and keep the backend running:
 
-The current directory layout and API imports do not agree with the previous README setup directions. Confirm and document the actual backend/frontend entry points, environment variables, and test results before describing the application as ready to deploy.
+```powershell
+cd C:\Users\YOUR_USERNAME\Downloads\shopflow\frontend
+npm install
+npm run dev
+```
+
+Open the Local URL printed by Vite, normally http://localhost:5173.
+
+### 3) First store account
+
+The frontend login screen expects an existing store account. Create one once from Swagger:
+
+1. Open http://127.0.0.1:8000/docs
+2. Expand `POST /auth/register-store`
+3. Click `Try it out`
+4. Enter a unique store name, email, and password (at least 8 characters), for example:
+
+```json
+{
+  "store_name": "My Store",
+  "email": "owner@example.com",
+  "password": "ChangeThis123"
+}
+```
+
+5. Click `Execute`. A successful response returns a `token`.
+6. Open the frontend and sign in with the same email and password.
+
+If Swagger returns `409 email in use`, the account already exists. Do not register it again; use `POST /auth/login` or sign in through the frontend.
+
+### Notes
+
+- Frontend API URL defaults to `http://127.0.0.1:8000`.
+- CORS allows Vite on ports 5173 and 5174.
+- AI chat requires a valid `OPENROUTER_API_KEY` and `OPENROUTER_MODEL` in the root `.env`. Other store functions do not require an AI key.
+- Keep `.env` private. The included `.env` is configured for local development; replace secrets before deploying publicly.
